@@ -1,4 +1,4 @@
-package com.nttd.mscustomer;
+package com.nttd.mscustomer.resource;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
