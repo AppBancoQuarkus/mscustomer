@@ -62,6 +62,6 @@ public class CustomerService {
 
 	public void findByProperties(Long id) {
 		// customerRepository.
-
+			//customerRepository.list(null, null)
 	}
 }
