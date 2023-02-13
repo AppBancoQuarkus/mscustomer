@@ -1,5 +1,9 @@
 package com.nttd.mscustomer.resource;
 
+import java.util.Random;
+
+import org.eclipse.microprofile.faulttolerance.Fallback;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.jboss.logging.Logger;
 
 import com.nttd.mscustomer.dto.CustomerDto;
@@ -23,20 +27,41 @@ import jakarta.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class CustomerResource {
 
+	
 	@Inject
 	CustomerService customerService;
 
 	@Inject
 	Logger logger;
-
+	
+	
+	/**
+	 *  REGISTRAR CLIENTE
+	 * */
+	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Fallback(fallbackMethod = "addCustomerDefault")
 	public Response addCustomer(CustomerDto customer) {
 		 logger.info("Inicio CustomerResource.addCustomer");
 		ResponseDto response = customerService.saveCustomer(customer);
 		return Response.ok(response).status(response.getCode()).build();
 	}
+	
+	public Response addCustomerDefault(CustomerDto customer) {
+		 logger.info("Inicio CustomerResource.addCustomerDefault");
+		ResponseDto response = new ResponseDto();
+		response.setCode(422);
+		response.setMessage("No se pudo registrar el cliente, volver a intentarlo");
+		response.setErrorMessage(customer.getNumberDocument());
+		return Response.ok(response).status(response.getCode()).build();
+	}
 
+	
+	/**
+	 *  ACTUALIZAR CLIENTE
+	 * */
+	
 	@PUT
 	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -50,16 +75,31 @@ public class CustomerResource {
 		return Response.ok(response).status(response.getCode()).build();
 	}
 
+	/**
+	 *  OBTENER CLIENTE
+	 * */
 	@GET
 	@Path("{id}")
+	@Timeout(200)
 	public Response getCustomerById(@PathParam(value = "id") Long id) {
 		logger.info("Inicio CustomerResource.getCustomerById");
-		Customer customer = customerService.getById(id);
-		if(customer == null)
-			return Response.ok(new ResponseDto(404, "No existe el id del customer")).status(404).build();
-		return Response.ok(customer).status(200).build();
+		 try {
+			randomDelay();
+			Customer customer = customerService.getById(id);
+			if(customer == null)
+				return Response.ok(new ResponseDto(404, "No existe el id del customer")).status(404).build();
+			return Response.ok(customer).status(200).build();
+		} catch (InterruptedException e) {
+			logger.error("error al obtener el customer");
+		}
+
+		return Response.ok(new Customer()).status(404).build();
 	}
 
+	
+	/**
+	 *  ELIMINAR CLIENTE
+	 * */
 	@DELETE
 	@Path("{id}")
 	public Response deleteCustomer(@PathParam(value = "id") Long id) {
@@ -70,5 +110,17 @@ public class CustomerResource {
 		ResponseDto response =customerService.deleteCustomer(id);
 		return Response.ok(response).status(response.getCode()).build();
 	}
+	
+	
+	  private void errorPosible(String failureLogMessage) {
+	        if (new Random().nextBoolean()) {
+	        	logger.error(failureLogMessage);
+	            throw new RuntimeException("Resource failure.");
+	        }
+	    }
+	  
+	  private void randomDelay() throws InterruptedException {
+	        Thread.sleep(new Random().nextInt(500));
+	    }
 
 }
