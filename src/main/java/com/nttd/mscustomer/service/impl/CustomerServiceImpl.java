@@ -1,5 +1,7 @@
 package com.nttd.mscustomer.service.impl;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import com.nttd.mscustomer.dto.CustomerDto;
 import com.nttd.mscustomer.dto.ResponseDto;
 import com.nttd.mscustomer.entity.Customer;
@@ -15,6 +17,18 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Inject
 	private CustomerRepository customerRepository;
+	
+	@ConfigProperty(name  = "excepcion.003")
+	String excepcion003;
+	
+	@ConfigProperty(name  = "excepcion.004")
+	String excepcion004;
+	
+	@ConfigProperty(name  = "excepcion.005")
+	String excepcion005;
+
+	@ConfigProperty(name  = "error.generic")
+	String errorgeneric;
 
 	@Transactional
 	public ResponseDto saveCustomer(CustomerDto customerDto) {
@@ -25,9 +39,9 @@ public class CustomerServiceImpl implements CustomerService {
 			customer.setName(customerDto.getName());
 			customer.setLastname(customerDto.getLastname());
 			customerRepository.persist(customer);
-			return new ResponseDto(201, "Se registro correctamente.");
+			return new ResponseDto(201, excepcion003);
 		} catch (Exception ex) {
-			return new ResponseDto(400, "Bad Request.", ex.getMessage());
+			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}
 	}
 
@@ -40,9 +54,9 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setName(customerDto.getName());
 		customer.setLastname(customerDto.getLastname());
 		customerRepository.persist(customer);
-		return new ResponseDto(201, "Se actualizo correctamente.");
+		return new ResponseDto(201, excepcion004);
 		} catch (Exception ex) {
-			return new ResponseDto(400, "Bad Request.", ex.getMessage());
+			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}
 	}
 
@@ -55,9 +69,9 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 		Customer customer = this.getById(id);
 		customerRepository.delete(customer);
-		return new ResponseDto(200, "Se elimino correctamente.");
+		return new ResponseDto(201, excepcion005);
 		} catch (Exception ex) {
-			return new ResponseDto(400, "Bad Request.", ex.getMessage());
+			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}
 	}
 
