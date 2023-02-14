@@ -39,6 +39,18 @@ public class CustomerResource {
 	@ConfigProperty(name  = "excepcion.002")
 	String excepcion002;
 	
+	@ConfigProperty(name  = "excepcion.006")
+	String excepcion006;
+
+	@ConfigProperty(name  = "error.generic")
+	String excepciongeneric;
+
+	@ConfigProperty(name  = "mensaje.http.422")
+	String excepcion422;
+
+	@ConfigProperty(name  = "mensaje.http.404")
+	String excepcion404;	
+	
 	
 	/**
 	 *  REGISTRAR CLIENTE
@@ -55,10 +67,7 @@ public class CustomerResource {
 	
 	public Response addCustomerDefault(CustomerDto customer) {
 		 logger.info("Inicio CustomerResource.addCustomerDefault");
-		ResponseDto response = new ResponseDto();
-		response.setCode(422);
-		response.setMessage("No se pudo registrar el cliente, volver a intentarlo");
-		response.setErrorMessage(customer.getNumberDocument());
+		ResponseDto response = new ResponseDto(422,excepcion422,excepcion006+" - "+customer.getNumberDocument());
 		return Response.ok(response).status(response.getCode()).build();
 	}
 
@@ -74,7 +83,7 @@ public class CustomerResource {
 		 logger.info("Inicio CustomerResource.updateCustomer");
 		Customer customer = customerService.getById(id);
 		if(customer == null)
-			return Response.ok(new ResponseDto(404, excepcion002,"")).status(404).build();
+			return Response.ok(new ResponseDto(404, excepcion404,excepcion002)).status(404).build();
 		customerDto.setIdCustomer(id);
 		ResponseDto response  =customerService.updateCustomer(customerDto);
 		return Response.ok(response).status(response.getCode()).build();
@@ -85,14 +94,14 @@ public class CustomerResource {
 	 * */
 	@GET
 	@Path("{id}")
-	@Timeout(500)
+	@Timeout(700)
 	public Response getCustomerById(@PathParam(value = "id") Long id) {
 		logger.info("Inicio CustomerResource.getCustomerById");
 		 try {
 			randomDelay();
 			Customer customer = customerService.getById(id);
 			if(customer == null)
-				return Response.ok(new ResponseDto(404, excepcion002,"")).status(404).build();
+				return Response.ok(new ResponseDto(404, excepcion404,excepcion002)).status(404).build();
 			return Response.ok(customer).status(200).build();
 		} catch (InterruptedException e) {
 			logger.error("error al obtener el customer");
@@ -111,7 +120,7 @@ public class CustomerResource {
 		logger.info("Inicio CustomerResource.deleteCustomer");
 		Customer customer = customerService.getById(id);
 		if(customer == null)
-			return Response.ok(new ResponseDto(404, excepcion002,"")).status(404).build();
+			return Response.ok(new ResponseDto(404, excepcion404,excepcion002)).status(404).build();
 		ResponseDto response =customerService.deleteCustomer(id);
 		return Response.ok(response).status(response.getCode()).build();
 	}

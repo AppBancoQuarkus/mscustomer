@@ -41,13 +41,17 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	public ResponseDto saveCustomer(CustomerDto customerDto) {
 		try {
-			Customer customer = new Customer();
-			customer.setTypeCustomer(customerDto.getTypeCustomer());
-			customer.setNumberDocument(customerDto.getNumberDocument());
-			customer.setName(customerDto.getName());
-			customer.setLastname(customerDto.getLastname());
-			customer.setState(stateActivo);
-			customerRepository.persist(customer);
+			// VERIFICAR SI ES NUEVO O YA EXISTENTE
+				Customer customer =    customerRepository.find("numberDocument", customerDto.getNumberDocument()).firstResult();
+				if(customer == null){
+					customer = new Customer();
+					customer.setTypeCustomer(customerDto.getTypeCustomer());
+					customer.setNumberDocument(customerDto.getNumberDocument());
+					customer.setName(customerDto.getName());
+					customer.setLastname(customerDto.getLastname());
+					customer.setState(stateActivo);
+					customerRepository.persist(customer);
+				}				
 			return new ResponseDto(201, excepcion003,customer);
 		} catch (Exception ex) {
 			return new ResponseDto(400, errorgeneric, ex.getMessage());
@@ -63,7 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setName(customerDto.getName());
 		customer.setLastname(customerDto.getLastname());
 		customerRepository.persist(customer);
-		return new ResponseDto(201, excepcion004,customer);
+		return new ResponseDto(200, excepcion004,customer);
 		} catch (Exception ex) {
 			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}
@@ -81,7 +85,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customer.setState(stateInactivo);
 			customerRepository.persist(customer);
 
-			return new ResponseDto(201, excepcion005,"	");
+			return new ResponseDto(200, excepcion005,customer);
 
 		} catch (Exception ex) {
 			return new ResponseDto(400, errorgeneric, ex.getMessage());
