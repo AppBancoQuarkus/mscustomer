@@ -1,6 +1,7 @@
 package com.nttd.mscustomer.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.nttd.mscustomer.entity.Customer;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class ResponseDto {
     private String message;
     private String errorMessage;
     private String description;
+    private Customer customer;
 
 
     
@@ -22,9 +24,10 @@ public class ResponseDto {
 
 
 
-    public ResponseDto(int code,String message) {
+    public ResponseDto(int code,String message,Customer customer) {
         this.code = code;
         this.message = message;
+        this.customer = customer;
     }
 
 

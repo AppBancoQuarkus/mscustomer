@@ -39,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customer.setName(customerDto.getName());
 			customer.setLastname(customerDto.getLastname());
 			customerRepository.persist(customer);
-			return new ResponseDto(201, excepcion003);
+			return new ResponseDto(201, excepcion003,customer);
 		} catch (Exception ex) {
 			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}
