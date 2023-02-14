@@ -76,11 +76,13 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	public ResponseDto deleteCustomer(Long id) {
 		try {
+
 			Customer customer = this.getById(id);
 			customer.setState(stateInactivo);
 			customerRepository.persist(customer);
 
 			return new ResponseDto(201, excepcion005,"	");
+
 		} catch (Exception ex) {
 			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}
