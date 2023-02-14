@@ -74,7 +74,7 @@ public class CustomerResource {
 		 logger.info("Inicio CustomerResource.updateCustomer");
 		Customer customer = customerService.getById(id);
 		if(customer == null)
-			return Response.ok(new ResponseDto(404, excepcion002)).status(404).build();
+			return Response.ok(new ResponseDto(404, excepcion002,"")).status(404).build();
 		customerDto.setIdCustomer(id);
 		ResponseDto response  =customerService.updateCustomer(customerDto);
 		return Response.ok(response).status(response.getCode()).build();
@@ -92,7 +92,7 @@ public class CustomerResource {
 			randomDelay();
 			Customer customer = customerService.getById(id);
 			if(customer == null)
-				return Response.ok(new ResponseDto(404, excepcion002)).status(404).build();
+				return Response.ok(new ResponseDto(404, excepcion002,"")).status(404).build();
 			return Response.ok(customer).status(200).build();
 		} catch (InterruptedException e) {
 			logger.error("error al obtener el customer");
@@ -111,7 +111,7 @@ public class CustomerResource {
 		logger.info("Inicio CustomerResource.deleteCustomer");
 		Customer customer = customerService.getById(id);
 		if(customer == null)
-			return Response.ok(new ResponseDto(404, excepcion002)).status(404).build();
+			return Response.ok(new ResponseDto(404, excepcion002,"")).status(404).build();
 		ResponseDto response =customerService.deleteCustomer(id);
 		return Response.ok(response).status(response.getCode()).build();
 	}
