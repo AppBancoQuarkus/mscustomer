@@ -30,6 +30,14 @@ public class CustomerServiceImpl implements CustomerService {
 	@ConfigProperty(name  = "error.generic")
 	String errorgeneric;
 
+	@ConfigProperty(name  = "state.valor.activo")
+	String stateActivo;
+
+	@ConfigProperty(name  = "state.valor.inactivo")
+	String stateInactivo;
+
+	
+
 	@Transactional
 	public ResponseDto saveCustomer(CustomerDto customerDto) {
 		try {
@@ -38,6 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customer.setNumberDocument(customerDto.getNumberDocument());
 			customer.setName(customerDto.getName());
 			customer.setLastname(customerDto.getLastname());
+			customer.setState(stateActivo);
 			customerRepository.persist(customer);
 			return new ResponseDto(201, excepcion003,customer);
 		} catch (Exception ex) {
@@ -54,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setName(customerDto.getName());
 		customer.setLastname(customerDto.getLastname());
 		customerRepository.persist(customer);
-		return new ResponseDto(201, excepcion004);
+		return new ResponseDto(201, excepcion004,customer);
 		} catch (Exception ex) {
 			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}
@@ -67,9 +76,11 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional
 	public ResponseDto deleteCustomer(Long id) {
 		try {
-		Customer customer = this.getById(id);
-		customerRepository.delete(customer);
-		return new ResponseDto(201, excepcion005);
+			Customer customer = this.getById(id);
+			customer.setState(stateInactivo);
+			customerRepository.persist(customer);
+
+			return new ResponseDto(201, excepcion005,"	");
 		} catch (Exception ex) {
 			return new ResponseDto(400, errorgeneric, ex.getMessage());
 		}

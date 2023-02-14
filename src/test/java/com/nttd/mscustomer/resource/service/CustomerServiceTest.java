@@ -67,7 +67,7 @@ public class CustomerServiceTest {
 		
 		Customer customerObject = new Customer();
 		Mockito.when(customerRepository.findById(any(Long.class))).thenReturn(customerObject);
-		Mockito.doNothing().when(customerRepository).delete(customerObject);
+		Mockito.doNothing().when(customerRepository).persist(customerObject);
 		ResponseDto response = customerService.deleteCustomer(any(Long.class));
 		Assertions.assertEquals(201, response.getCode());
 	}

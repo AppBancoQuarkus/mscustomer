@@ -18,5 +18,6 @@ public class Customer {
 	private String numberDocument;
 	private String name;
 	private String lastname;
+	private String state;
 
 }
