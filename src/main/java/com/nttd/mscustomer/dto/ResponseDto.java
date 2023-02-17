@@ -1,5 +1,7 @@
 package com.nttd.mscustomer.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.nttd.mscustomer.entity.Customer;
 
@@ -16,6 +18,7 @@ public class ResponseDto {
     private String errorMessage;
     private String description;
     private Customer customer;
+    private List<Customer> listacustomer;
 
 
     
@@ -28,6 +31,12 @@ public class ResponseDto {
         this.code = code;
         this.message = message;
         this.customer = customer;
+    }
+
+    public ResponseDto(int code,String message,List<Customer> listacustomer) {
+        this.code = code;
+        this.message = message;
+        this.listacustomer = listacustomer;
     }
 
 

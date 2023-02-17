@@ -1,6 +1,5 @@
 package com.nttd.mscustomer.resource;
 
-import java.util.Random;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Fallback;
@@ -9,7 +8,6 @@ import org.jboss.logging.Logger;
 
 import com.nttd.mscustomer.dto.CustomerDto;
 import com.nttd.mscustomer.dto.ResponseDto;
-import com.nttd.mscustomer.entity.Customer;
 import com.nttd.mscustomer.service.CustomerService;
 
 import jakarta.inject.Inject;
@@ -36,20 +34,14 @@ public class CustomerResource {
 	Logger logger;
 	
 	
-	@ConfigProperty(name  = "excepcion.002")
-	String excepcion002;
 	
 	@ConfigProperty(name  = "excepcion.006")
 	String excepcion006;
 
-	@ConfigProperty(name  = "error.generic")
-	String excepciongeneric;
 
 	@ConfigProperty(name  = "mensaje.http.422")
 	String excepcion422;
 
-	@ConfigProperty(name  = "mensaje.http.404")
-	String excepcion404;	
 	
 	
 	/**
@@ -80,14 +72,22 @@ public class CustomerResource {
 	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateCustomer(@PathParam(value = "id") Long id, CustomerDto customerDto) {
-		 logger.info("Inicio CustomerResource.updateCustomer");
-		Customer customer = customerService.getById(id);
-		if(customer == null)
-			return Response.ok(new ResponseDto(404, excepcion404,excepcion002)).status(404).build();
-		customerDto.setIdCustomer(id);
-		ResponseDto response  =customerService.updateCustomer(customerDto);
+		logger.info("Inicio CustomerResource.updateCustomer");
+		ResponseDto response  =customerService.updateCustomer(id,customerDto);
 		return Response.ok(response).status(response.getCode()).build();
 	}
+
+	/**
+	 *  OBTENER CLIENTE por filtro
+	 * */
+	@GET
+	public Response getAllCustomer(CustomerDto customerDto) {
+		logger.info("Inicio CustomerResource.getAllCustomer");
+		ResponseDto response = customerService.getAllCustomer(customerDto);							
+		return Response.ok(response).status(response.getCode()).build();
+	}
+
+
 
 	/**
 	 *  OBTENER CLIENTE
@@ -97,17 +97,8 @@ public class CustomerResource {
 	@Timeout(700)
 	public Response getCustomerById(@PathParam(value = "id") Long id) {
 		logger.info("Inicio CustomerResource.getCustomerById");
-		 try {
-			randomDelay();
-			Customer customer = customerService.getById(id);
-			if(customer == null)
-				return Response.ok(new ResponseDto(404, excepcion404,excepcion002)).status(404).build();
-			return Response.ok(customer).status(200).build();
-		} catch (InterruptedException e) {
-			logger.error("error al obtener el customer");
-		}
-
-		return Response.ok(new Customer()).status(404).build();
+		ResponseDto response = customerService.getCustomerById(id);
+		return Response.ok(response).status(response.getCode()).build();
 	}
 
 	
@@ -118,16 +109,11 @@ public class CustomerResource {
 	@Path("{id}")
 	public Response deleteCustomer(@PathParam(value = "id") Long id) {
 		logger.info("Inicio CustomerResource.deleteCustomer");
-		Customer customer = customerService.getById(id);
-		if(customer == null)
-			return Response.ok(new ResponseDto(404, excepcion404,excepcion002)).status(404).build();
 		ResponseDto response =customerService.deleteCustomer(id);
 		return Response.ok(response).status(response.getCode()).build();
 	}
 	
 	
-	  private void randomDelay() throws InterruptedException {
-	        Thread.sleep(new Random().nextInt(500));
-	    }
+	 
 
 }

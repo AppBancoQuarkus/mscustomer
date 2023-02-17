@@ -61,8 +61,8 @@ public class CustomerResourceTest {
 		ResponseDto responseDto = new ResponseDto();
 		responseDto.setCode(404);
 		
-		Customer customerNotFound = null;
-		Mockito.when(customerService.getById(any(Long.class))).thenReturn(customerNotFound);
+		//Customer customerNotFound = null;
+		//Mockito.when(customerService.getById(any(Long.class))).thenReturn(customerNotFound);
 		
 		ResponseDto response =  (ResponseDto) customerResource.updateCustomer(1l,new CustomerDto()).getEntity();
 		
@@ -80,10 +80,10 @@ public class CustomerResourceTest {
 		
 		Customer customerFound = new Customer();
 		customerFound.setIdCustomer(1l);
-		Mockito.when(customerService.getById(any(Long.class))).thenReturn(customerFound);
+		/*Mockito.when(customerService.getById(any(Long.class))).thenReturn(customerFound);
 		
 		Mockito.when(customerService.updateCustomer(Mockito.any(CustomerDto.class)))
-		.thenReturn(responseDto);
+		.thenReturn(responseDto);*/
 		ResponseDto response =  (ResponseDto) customerResource.updateCustomer(customerFound.getIdCustomer(),
 				new CustomerDto()).getEntity();
 		

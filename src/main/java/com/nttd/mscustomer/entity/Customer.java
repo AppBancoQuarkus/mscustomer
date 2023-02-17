@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "customer")
+@Entity(name = "BQMCUSTOMER")
 public class Customer {
 
 	@Id
@@ -18,7 +18,7 @@ public class Customer {
             name = "customerSequence",
             sequenceName = "customer_id_seq",
             allocationSize = 1,
-            initialValue = 1)
+            initialValue = 9)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customerSequence") 
 	private Long idCustomer;
 	private String typeCustomer;
