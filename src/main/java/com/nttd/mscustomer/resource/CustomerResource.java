@@ -4,6 +4,7 @@ package com.nttd.mscustomer.resource;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Timeout;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
 import com.nttd.mscustomer.dto.CustomerDto;
@@ -51,6 +52,7 @@ public class CustomerResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Fallback(fallbackMethod = "addCustomerDefault")
+	@Operation(summary = "Registrar el cliente",description = "permite Registrar los clientes.")
 	public Response addCustomer(CustomerDto customer) {
 		 logger.info("Inicio CustomerResource.addCustomer");
 		ResponseDto response = customerService.saveCustomer(customer);
@@ -71,6 +73,7 @@ public class CustomerResource {
 	@PUT
 	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Operation(summary = "Actualizar el cliente",description = "permite Actualizar los clientes.")
 	public Response updateCustomer(@PathParam(value = "id") Long id, CustomerDto customerDto) {
 		logger.info("Inicio CustomerResource.updateCustomer");
 		ResponseDto response  =customerService.updateCustomer(id,customerDto);
@@ -81,6 +84,7 @@ public class CustomerResource {
 	 *  OBTENER CLIENTE por filtro
 	 * */
 	@GET
+	@Operation(summary = "Obtienes el cliente",description = "Obtienes el clientes por filtros.")
 	public Response getAllCustomer(CustomerDto customerDto) {
 		logger.info("Inicio CustomerResource.getAllCustomer");
 		ResponseDto response = customerService.getAllCustomer(customerDto);							
@@ -95,6 +99,7 @@ public class CustomerResource {
 	@GET
 	@Path("{id}")
 	@Timeout(700)
+	@Operation(summary = "Obtienes el cliente por Id",description = "Obtienes el clientes por Id.")
 	public Response getCustomerById(@PathParam(value = "id") Long id) {
 		logger.info("Inicio CustomerResource.getCustomerById");
 		ResponseDto response = customerService.getCustomerById(id);
@@ -107,6 +112,7 @@ public class CustomerResource {
 	 * */
 	@DELETE
 	@Path("{id}")
+	@Operation(summary = "Eliminar el cliente",description = "Eliminas el clientes por Id.")
 	public Response deleteCustomer(@PathParam(value = "id") Long id) {
 		logger.info("Inicio CustomerResource.deleteCustomer");
 		ResponseDto response =customerService.deleteCustomer(id);
