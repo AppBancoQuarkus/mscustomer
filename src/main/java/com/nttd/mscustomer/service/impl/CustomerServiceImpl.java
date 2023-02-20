@@ -94,7 +94,7 @@ public class CustomerServiceImpl implements CustomerService {
 							 params).list();
             if(listcustomer.size() == 0)
                 return  new ResponseDto(204,excepcion002,"");
-            else return  new ResponseDto(200,excepcion003,listcustomer);
+            else return  new ResponseDto(200,excepcion003,listcustomer.get(0));
             
         }catch(Exception ex){
             return  new ResponseDto(400,errorgeneric,ex.getMessage());
